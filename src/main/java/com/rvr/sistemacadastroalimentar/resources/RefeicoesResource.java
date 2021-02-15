@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rvr.sistemacadastroalimentar.entities.Refeicoes;
-import com.rvr.sistemacadastroalimentar.entities.TiposAlimento;
 import com.rvr.sistemacadastroalimentar.services.RefeicoesService;
+
 
 @RestController
 @RequestMapping("api/refeicoes")
