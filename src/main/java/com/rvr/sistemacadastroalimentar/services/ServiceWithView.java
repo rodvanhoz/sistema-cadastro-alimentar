@@ -8,4 +8,8 @@ public interface ServiceWithView<T> {
 	
 	public T findById(Integer i);
 	
+	public void delete(Integer id);
+	
+	public T update(Integer id, T obj);
+
 }
