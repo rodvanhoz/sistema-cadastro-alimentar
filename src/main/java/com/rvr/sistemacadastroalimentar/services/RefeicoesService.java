@@ -85,9 +85,13 @@ public class RefeicoesService implements ServiceWithView<Refeicoes> {
 		}
 	}
 
+	@Override
+	public Refeicoes insert(Refeicoes obj) {
+		return repository.save(obj);
+	}
+
 	private void updateData(Refeicoes entity, Refeicoes obj) {
 		entity.setMoment(obj.getMoment());
 		entity.setPesoAlimentos(obj.getPesoAlimentos());
 	}
-
 }
