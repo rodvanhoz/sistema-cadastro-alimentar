@@ -1,6 +1,7 @@
 package com.rvr.sistemacadastroalimentar.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -29,6 +30,13 @@ public class PesoAlimentoService implements ServiceWithView<PesoAlimento> {
 	public PesoAlimento findById(Integer i) {
 		return repository.findById(i)
 				.get();
+	}
+	
+	public List<PesoAlimento> findByIdRefeicao(Integer i) {
+		return repository.findAll()
+				.stream()
+				.filter(e -> e.getRefeicao().getIdRefeicao() == i)
+				.collect(Collectors.toList());
 	}
 	
 	public PesoAlimento insert(PesoAlimento pesoAlimento) {

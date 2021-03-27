@@ -19,7 +19,7 @@ import com.rvr.sistemacadastroalimentar.entities.PesoAlimento;
 import com.rvr.sistemacadastroalimentar.services.PesoAlimentoService;
 
 @RestController
-@RequestMapping("api/pesoalimentos")
+@RequestMapping("api/peso_alimentos")
 public class PesoAlimentosResource {
 	
 	@Autowired
@@ -33,6 +33,13 @@ public class PesoAlimentosResource {
 
 	@PostMapping
 	public ResponseEntity<PesoAlimento> insert(@RequestBody PesoAlimento pesoAlimento) {
+		System.out.println("@@@@@@@" + pesoAlimento.toString());
+		
+		if (!validator(pesoAlimento)) {
+			System.out.println("Há atributos nulos");
+			return ResponseEntity.badRequest().build();
+		}
+		
 		pesoAlimento = service.insert(pesoAlimento);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(pesoAlimento.getIdPesoAlimento()).toUri();
 		return ResponseEntity.created(uri).body(pesoAlimento);
@@ -49,5 +56,15 @@ public class PesoAlimentosResource {
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
+	}
+	
+	private boolean validator(PesoAlimento pesoAlimento) {
+		
+		if (pesoAlimento.getRefeicao() == null || (pesoAlimento.getAlimento() == null)) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 }

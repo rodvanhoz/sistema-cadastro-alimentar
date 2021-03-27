@@ -30,12 +30,6 @@ public class Refeicoes implements Serializable {
 	@OneToMany(mappedBy = "refeicao")
 	private Set<PesoAlimento> pesoAlimentos = new HashSet<>();
 
-	private Double kcalTotal;
-	private Double carboidratos;
-	private Double proteinas;
-	private Double gorduras;
-	private Double pesoTotal;
-
 	public Refeicoes() {
 
 	}
@@ -43,12 +37,7 @@ public class Refeicoes implements Serializable {
 	public Refeicoes(Integer idRefeicao, Instant moment) {
 		this.idRefeicao = idRefeicao;
 		this.moment = moment;
-		
-		this.kcalTotal = 0.0;
-		this.carboidratos = 0.0;
-		this.proteinas = 0.0;
-		this.gorduras = 0.0;
-		this.pesoTotal = 0.0;
+
 	}
 
 	public Integer getIdRefeicao() {
@@ -73,37 +62,6 @@ public class Refeicoes implements Serializable {
 
 	public void setPesoAlimentos(Set<PesoAlimento> pesoAlimentos) {
 		this.pesoAlimentos = pesoAlimentos;
-	}
-
-	public void calculaMacros() {
-
-		getPesoAlimentos().forEach(f -> {
-			this.kcalTotal += f.getKcal();
-			this.carboidratos += (f.getPeso() * f.getAlimento().getQtdeCarboidrato());
-			this.proteinas += (f.getPeso() * f.getAlimento().getQtdeProteinas());
-			this.gorduras += (f.getPeso() * f.getAlimento().getQtdeGorduras());
-			this.pesoTotal += f.getPeso();
-		});
-	}
-
-	public Double getKcalTotal() {
-		return kcalTotal;
-	}
-
-	public Double getCarboidratos() {
-		return carboidratos;
-	}
-
-	public Double getProteinas() {
-		return proteinas;
-	}
-
-	public Double getGorduras() {
-		return gorduras;
-	}
-
-	public Double getPesoTotal() {
-		return pesoTotal;
 	}
 
 	@Override
