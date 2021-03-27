@@ -1,10 +1,11 @@
 package com.rvr.sistemacadastroalimentar.entities.views;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.rvr.sistemacadastroalimentar.entities.Refeicoes;
+import com.rvr.sistemacadastroalimentar.entities.dto.PesoAlimentoDTO;
+import com.rvr.sistemacadastroalimentar.entities.dto.RefeicoesDTO;
 
 public class RefeicoesView {
 
@@ -13,64 +14,76 @@ public class RefeicoesView {
 	private Double proteinas;
 	private Double gorduras;
 	private Double pesoTotal;
-	
-	private Double carb;
-	private Double prot;
-	private Double gord;
-	private Double peso;
-	private Double kcal;
-	
-	private Map<String, Double> macros = new HashMap<>();
-	
+
+	private List<Refeicoes> refeicoesModel = new ArrayList<>();
+	private RefeicoesDTO dto;
+
+	List<RefeicoesDTO> refeicoes = new ArrayList<>();
+	List<PesoAlimentoDTO> pesosAlimentos = new ArrayList<>();
+
 	public RefeicoesView(List<Refeicoes> refeicoes) {
-		
+
+		this.kcalTotal = 0.0;
+		this.carboidratos = 0.0;
+		this.proteinas = 0.0;
+		this.gorduras = 0.0;
+		this.pesoTotal = 0.0;
+
+		this.refeicoesModel = refeicoes;
+
+		calculaMacrosDiario(refeicoes);
+	}
+
+	public RefeicoesView(Refeicoes refeicao) {
+
 		this.kcalTotal = 0.0;
 		this.carboidratos = 0.0;
 		this.proteinas = 0.0;
 		this.gorduras = 0.0;
 		this.pesoTotal = 0.0;
 		
-		calculaMacrosDiario(refeicoes);
-	}
+		List<Refeicoes> ref = new ArrayList<>();
+		ref.add(refeicao);
 
+		this.refeicoesModel.add(refeicao);
+
+		calculaMacrosDiario(ref);
+	}
+	
 	private void calculaMacrosDiario(List<Refeicoes> refeicoes) {
-		
-		macros.clear();
-		
-		refeicoes.forEach(e -> {
-			calculaMacrosPorRefeicao(e);
-			
-			this.kcalTotal += macros.get("kcal");
-			this.carboidratos += macros.get("carboidratos");
-			this.proteinas += macros.get("proteinas");
-			this.gorduras += macros.get("gorduras");
-			this.pesoTotal += macros.get("peso");
+
+		if (this.refeicoes.size() == 0) {
+			this.refeicoes = criaListaDTO(refeicoes);
+		}
+
+		this.refeicoes.forEach(e -> {
+			e.calculaMacrosPorRefeicao();
+
+			this.kcalTotal += e.getMacros().get("kcal");
+			this.carboidratos += e.getMacros().get("carboidratos");
+			this.proteinas += e.getMacros().get("proteinas");
+			this.gorduras += e.getMacros().get("gorduras");
+			this.pesoTotal += e.getMacros().get("peso");
 		});
-		
+
 		System.out.println(this.pesoTotal);
 	}
 
-	private void calculaMacrosPorRefeicao(Refeicoes refeicao) {
-		
-		carb = 0.0;
-		prot = 0.0;
-		gord = 0.0;
-		peso = 0.0;
-		kcal = 0.0;
-		
-		refeicao.getPesoAlimentos().forEach(e -> {
-			kcal += e.getKcal();
-			carb += (e.getPeso() * e.getAlimento().getQtdeCarboidrato());
-			prot += (e.getPeso() * e.getAlimento().getQtdeProteinas());
-			gord += (e.getPeso() * e.getAlimento().getQtdeGorduras());
-			peso += e.getPeso();
+	private List<RefeicoesDTO> criaListaDTO(List<Refeicoes> refeicoes) {
+
+		List<RefeicoesDTO> list = new ArrayList<>();
+
+		refeicoes.forEach(e -> {
+			dto = new RefeicoesDTO(e);
+			list.add(dto);
 		});
-		
-		macros.put("carboidratos", carb);
-		macros.put("proteinas", prot);
-		macros.put("gorduras", gord);
-		macros.put("kcal", kcal);
-		macros.put("peso", peso);
+
+		return list;
+	}
+
+	public void recalcularPesos() {
+
+		calculaMacrosDiario(this.refeicoesModel);
 	}
 
 	public Double getKcalTotal() {
@@ -91,6 +104,10 @@ public class RefeicoesView {
 
 	public Double getPesoTotal() {
 		return pesoTotal;
+	}
+
+	public List<RefeicoesDTO> getRefeicoes() {
+		return refeicoes;
 	}
 
 }

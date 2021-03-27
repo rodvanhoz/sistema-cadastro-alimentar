@@ -22,7 +22,6 @@ public class Alimentos implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idAlimento; 
 	
-	
 	private String nome;
 	private Double peso;
 	private Double qtdeCarboidrato;

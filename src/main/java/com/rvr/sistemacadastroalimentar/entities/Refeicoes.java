@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -30,11 +31,11 @@ public class Refeicoes implements Serializable {
 	@OneToMany(mappedBy = "refeicao")
 	private Set<PesoAlimento> pesoAlimentos = new HashSet<>();
 
-	private Double kcalTotal;
-	private Double carboidratos;
-	private Double proteinas;
-	private Double gorduras;
-	private Double pesoTotal;
+	@Transient private Double kcalTotal;
+	@Transient private Double carboidratos;
+	@Transient private Double proteinas;
+	@Transient private Double gorduras;
+	@Transient private Double pesoTotal;
 
 	public Refeicoes() {
 
@@ -73,17 +74,6 @@ public class Refeicoes implements Serializable {
 
 	public void setPesoAlimentos(Set<PesoAlimento> pesoAlimentos) {
 		this.pesoAlimentos = pesoAlimentos;
-	}
-
-	public void calculaMacros() {
-
-		getPesoAlimentos().forEach(f -> {
-			this.kcalTotal += f.getKcal();
-			this.carboidratos += (f.getPeso() * f.getAlimento().getQtdeCarboidrato());
-			this.proteinas += (f.getPeso() * f.getAlimento().getQtdeProteinas());
-			this.gorduras += (f.getPeso() * f.getAlimento().getQtdeGorduras());
-			this.pesoTotal += f.getPeso();
-		});
 	}
 
 	public Double getKcalTotal() {
